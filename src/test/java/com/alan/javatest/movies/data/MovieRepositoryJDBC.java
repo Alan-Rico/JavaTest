@@ -22,9 +22,8 @@ public class MovieRepositoryJDBC implements MovieRepository {
 
     @Override
     public Movie findById(long id) {
-        // Corrección: Usar queryForObject para un solo resultado filtrando por id
         Object[] args = { id };
-        return jdbcTemplate.queryForObject("select * from movies WHERE id = ?", args, movieMapper);
+       return jdbcTemplate.queryForObject("select * from movies where id = ?", args, movieMapper);
     }
 
     @Override
@@ -35,7 +34,8 @@ public class MovieRepositoryJDBC implements MovieRepository {
 
     @Override
     public void saveOrUpdate(Movie movie) {
-
+        jdbcTemplate.update("insert into movies (name, minutes, genre) values (?, ?, ?)",
+                movie.getName(), movie.getMinutes(), movie.getGenre().toString());
     }
 
     private static RowMapper<Movie> movieMapper = (rs, rowNum) -> new Movie(
